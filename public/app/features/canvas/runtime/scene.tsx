@@ -60,6 +60,7 @@ export class Scene {
   currentLayer?: FrameState;
   isEditingEnabled?: boolean;
   skipNextSelectionBroadcast = false;
+  ignoreDataUpdate = false;
 
   isPanelEditing = locationService.getSearchObject().editPanel !== undefined;
 
@@ -326,6 +327,12 @@ export class Scene {
       .on('clickGroup', (event) => {
         this.selecto!.clickTarget(event.inputEvent, event.inputTarget);
       })
+      .on('dragStart', (event) => {
+        this.ignoreDataUpdate = true;
+      })
+      .on('dragGroupStart', (event) => {
+        this.ignoreDataUpdate = true;
+      })
       .on('drag', (event) => {
         const targetedElement = this.findElementByTarget(event.target);
         targetedElement!.applyDrag(event);
@@ -336,11 +343,16 @@ export class Scene {
           targetedElement!.applyDrag(event);
         });
       })
-      .on('dragStart', (event) => {
-        const targetedElement = this.findElementByTarget(event.target);
-        if (targetedElement) {
-          targetedElement.sizeStyle = { ...targetedElement.sizeStyle, zIndex: 100 };
-        }
+      .on('dragGroupEnd', (e) => {
+        e.events.forEach((event) => {
+          const targetedElement = this.findElementByTarget(event.target);
+          if (targetedElement) {
+            targetedElement.setPlacementFromConstraint();
+          }
+        });
+
+        this.moved.next(Date.now());
+        this.ignoreDataUpdate = false;
       })
       .on('dragEnd', (event) => {
         const targetedElement = this.findElementByTarget(event.target);
@@ -349,6 +361,7 @@ export class Scene {
         }
 
         this.moved.next(Date.now());
+        this.ignoreDataUpdate = false;
       })
       .on('resizeStart', (event) => {
         const targetedElement = this.findElementByTarget(event.target);
@@ -408,7 +421,6 @@ export class Scene {
       this.updateSelection({ targets });
 
       if (event.isDragStart) {
-        console.log('isDragStart');
         event.inputEvent.preventDefault();
         setTimeout(() => {
           this.moveable!.dragStart(event.inputEvent);
