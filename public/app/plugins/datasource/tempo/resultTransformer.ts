@@ -5,11 +5,9 @@ import differenceInHours from 'date-fns/differenceInHours';
 import formatDistance from 'date-fns/formatDistance';
 
 import {
-  ArrayVector,
   DataFrame,
   DataQueryResponse,
   DataSourceInstanceSettings,
-  Field,
   FieldType,
   MutableDataFrame,
   TraceKeyValuePair,
@@ -539,8 +537,6 @@ export function transformTrace(response: DataQueryResponse, nodeGraph = false): 
   if (!frame) {
     return emptyDataQueryResponse;
   }
-
-  // TODO: Validate that the frame is valid
 
   let data = [...response.data];
   if (nodeGraph) {
