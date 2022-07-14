@@ -156,14 +156,6 @@ func spanToSpanRow(span pdata.Span, libraryTags pdata.InstrumentationLibrary, re
 	}, nil
 }
 
-func toJSONString(json []byte) string {
-	s := string(json)
-	if s == "null" {
-		return ""
-	}
-	return s
-}
-
 func resourceToProcess(resource pdata.Resource) (string, []*KeyValue) {
 	attrs := resource.Attributes()
 	serviceName := tracetranslator.ResourceNoServiceName
