@@ -1,11 +1,11 @@
 import { Action, KBarProvider } from 'kbar';
 import { Component, ComponentType, Fragment, ReactNode } from 'react';
 import CacheProvider from 'react-inlinesvg/provider';
-import { Provider } from 'react-redux';
 import { Route, Routes } from 'react-router-dom-v5-compat';
 
 import { config, navigationLogger, reportInteraction } from '@grafana/runtime';
 import { ErrorBoundaryAlert, PortalContainer, TimeRangeProvider } from '@grafana/ui';
+import { Provider } from 'react-redux';
 import { getAppRoutes } from 'app/routes/routes';
 import { store } from 'app/store/store';
 
@@ -19,8 +19,8 @@ import { ThemeProvider } from './core/utils/ConfigProvider';
 import { LiveConnectionWarning } from './features/live/LiveConnectionWarning';
 import { ExtensionRegistriesProvider } from './features/plugins/extensions/ExtensionRegistriesContext';
 import { pluginExtensionRegistries } from './features/plugins/extensions/registry/setup';
-import { ScopesContextProvider } from './features/scopes/ScopesContextProvider';
 import { RouterWrapper } from './routes/RoutesWrapper';
+import { ScopesContextProvider } from './features/scopes/ScopesContextProvider';
 
 interface AppWrapperProps {
   app: GrafanaApp;
